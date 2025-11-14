@@ -1,0 +1,141 @@
+{
+  "_comment": "Workflow de lipsync com segmentação para textos longos",
+  "_description": "Processa textos longos dividindo em segmentos de 60s",
+  "_inputs": {
+    "image": "Caminho para imagem de retrato",
+    "text": "Texto longo para narração (até 60s)"
+  },
+  "_outputs": {
+    "video": "Vídeo MP4 completo com lipsync"
+  },
+
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "portrait.png"
+    },
+    "_meta": {
+      "title": "Carregar Imagem"
+    }
+  },
+
+  "2": {
+    "class_type": "TextSegmenter",
+    "inputs": {
+      "text": "Texto longo aqui...",
+      "max_chars_per_segment": 500,
+      "split_on_punctuation": true,
+      "overlap_chars": 50
+    },
+    "_meta": {
+      "title": "Segmentar Texto Longo"
+    }
+  },
+
+  "3": {
+    "class_type": "XTTSTextToAudioBatch",
+    "inputs": {
+      "text_segments": ["2", 0],
+      "language": "pt",
+      "temperature": 0.7,
+      "speed": 1.0,
+      "enable_text_splitting": true
+    },
+    "_meta": {
+      "title": "XTTS v2 - Gerar Áudio por Segmento"
+    }
+  },
+
+  "4": {
+    "class_type": "AudioConcatenate",
+    "inputs": {
+      "audio_segments": ["3", 0],
+      "crossfade_ms": 100
+    },
+    "_meta": {
+      "title": "Concatenar Segmentos de Áudio"
+    }
+  },
+
+  "5": {
+    "class_type": "LatentSyncNode",
+    "inputs": {
+      "image": ["1", 0],
+      "audio": ["4", 0],
+      "lips_expression": 2.0,
+      "inference_steps": 25,
+      "guidance_scale": 7.5,
+      "strength": 0.8,
+      "batch_processing": true
+    },
+    "_meta": {
+      "title": "LatentSync 1.6 - Aplicar Lipsync"
+    }
+  },
+
+  "6": {
+    "class_type": "VHSVideoCombine",
+    "inputs": {
+      "frames": ["5", 0],
+      "audio": ["4", 0],
+      "fps": 30,
+      "codec": "h264",
+      "quality": "high",
+      "format": "video/h264-mp4"
+    },
+    "_meta": {
+      "title": "Combinar Vídeo + Áudio"
+    }
+  },
+
+  "7": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": ["6", 0],
+      "filename_prefix": "lipsync_segmented",
+      "output_path": "output/"
+    },
+    "_meta": {
+      "title": "Salvar Vídeo Final"
+    }
+  },
+
+  "_workflow_info": {
+    "name": "Segmented Lipsync",
+    "version": "1.0",
+    "author": "Cósmica Dread",
+    "description": "Workflow para textos longos com segmentação automática",
+    "requirements": {
+      "nodes": ["ComfyUI-XTTS", "ComfyUI-LatentSync", "ComfyUI-VideoHelperSuite"],
+      "models": ["XTTS v2", "LatentSync 1.6", "VAE FT MSE"],
+      "vram_min": "8GB",
+      "duration": "5-15 minutos para 60s de vídeo"
+    },
+    "parameters": {
+      "configurable": {
+        "max_chars_per_segment": "Tamanho máximo de cada segmento (500-1000)",
+        "split_on_punctuation": "Dividir em pontuação (true/false)",
+        "overlap_chars": "Sobreposição entre segmentos (50-100)",
+        "crossfade_ms": "Crossfade entre áudios (50-200ms)",
+        "language": "Idioma do áudio",
+        "lips_expression": "Intensidade dos lábios",
+        "inference_steps": "Qualidade do lipsync"
+      }
+    },
+    "usage": {
+      "example": "python scripts/run_workflow.py --workflow segmented --image portrait.png --text-file long_script.txt",
+      "best_for": [
+        "Vídeos longos (30-90 segundos)",
+        "Textos extensos",
+        "Narrações contínuas",
+        "Conteúdo educacional/storytelling"
+      ]
+    },
+    "notes": [
+      "Divide automaticamente textos longos em segmentos processáveis",
+      "Aplica crossfade entre segmentos de áudio para transição suave",
+      "Processa em batch para melhor eficiência",
+      "Ideal para textos acima de 500 caracteres"
+    ]
+  }
+}

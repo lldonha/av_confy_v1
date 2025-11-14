@@ -1,0 +1,244 @@
+# Configuração de modelos para Lipsync ComfyUI Workflow
+# Lista completa de modelos necessários com URLs e checksums
+
+models:
+  # XTTS v2 - Text-to-Speech
+  - name: "XTTS v2"
+    type: "xtts"
+    filename: "model.pth"
+    destination: "models/xtts"
+    url: "https://huggingface.co/coqui/XTTS-v2/resolve/main/model.pth"
+    size: 1870000000  # ~1.8GB
+    checksum: ""  # MD5 checksum (preencher após download)
+    checksum_type: "md5"
+    version: "2.0.0"
+    description: "Modelo principal XTTS v2 para geração de áudio multilíngue"
+    required: true
+    priority: 1
+
+  - name: "XTTS v2 Config"
+    type: "xtts"
+    filename: "config.json"
+    destination: "models/xtts"
+    url: "https://huggingface.co/coqui/XTTS-v2/resolve/main/config.json"
+    size: 2048  # ~2KB
+    checksum: ""
+    checksum_type: "md5"
+    version: "2.0.0"
+    description: "Arquivo de configuração do XTTS v2"
+    required: true
+    priority: 1
+
+  - name: "XTTS v2 Vocab"
+    type: "xtts"
+    filename: "vocab.json"
+    destination: "models/xtts"
+    url: "https://huggingface.co/coqui/XTTS-v2/resolve/main/vocab.json"
+    size: 5242880  # ~5MB
+    checksum: ""
+    checksum_type: "md5"
+    version: "2.0.0"
+    description: "Vocabulário do XTTS v2"
+    required: true
+    priority: 1
+
+  # LatentSync 1.6 - Lipsync
+  - name: "LatentSync 1.6"
+    type: "latentsync"
+    filename: "latentsync_v1.6.safetensors"
+    destination: "models/latentsync"
+    url: "https://huggingface.co/Doubiiu/LatentSync/resolve/main/latentsync_v1.6.safetensors"
+    size: 4200000000  # ~4.2GB
+    checksum: ""
+    checksum_type: "sha256"
+    version: "1.6"
+    description: "Modelo LatentSync 1.6 para sincronização labial de alta qualidade"
+    required: true
+    priority: 1
+
+  - name: "LatentSync VAE"
+    type: "latentsync"
+    filename: "vae.safetensors"
+    destination: "models/latentsync"
+    url: "https://huggingface.co/Doubiiu/LatentSync/resolve/main/vae.safetensors"
+    size: 334000000  # ~334MB
+    checksum: ""
+    checksum_type: "sha256"
+    version: "1.6"
+    description: "VAE para LatentSync"
+    required: true
+    priority: 2
+
+  # Stable Diffusion Base (para LatentSync)
+  - name: "Realistic Vision v5.1"
+    type: "checkpoint"
+    filename: "realisticVisionV51.safetensors"
+    destination: "models/checkpoints"
+    url: "https://civitai.com/api/download/models/130072"
+    size: 2130000000  # ~2.1GB
+    checksum: ""
+    checksum_type: "sha256"
+    version: "5.1"
+    description: "Checkpoint Realistic Vision v5.1 para geração realista"
+    required: false
+    priority: 3
+
+  - name: "DreamShaper 8"
+    type: "checkpoint"
+    filename: "dreamshaper_8.safetensors"
+    destination: "models/checkpoints"
+    url: "https://civitai.com/api/download/models/128713"
+    size: 2000000000  # ~2GB
+    checksum: ""
+    checksum_type: "sha256"
+    version: "8.0"
+    description: "Checkpoint DreamShaper 8 (alternativa)"
+    required: false
+    priority: 4
+
+  # VAE
+  - name: "VAE FT MSE"
+    type: "vae"
+    filename: "vae-ft-mse-840000.safetensors"
+    destination: "models/vae"
+    url: "https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.safetensors"
+    size: 334000000  # ~334MB
+    checksum: ""
+    checksum_type: "sha256"
+    version: "1.0"
+    description: "VAE de alta qualidade da Stability AI"
+    required: true
+    priority: 2
+
+  # Wav2Lip (alternativa ao LatentSync)
+  - name: "Wav2Lip GAN"
+    type: "wav2lip"
+    filename: "wav2lip_gan.pth"
+    destination: "models/wav2lip"
+    url: "https://github.com/Rudrabha/Wav2Lip/releases/download/models/wav2lip_gan.pth"
+    size: 150000000  # ~150MB
+    checksum: ""
+    checksum_type: "md5"
+    version: "1.0"
+    description: "Modelo Wav2Lip GAN (alternativa mais leve ao LatentSync)"
+    required: false
+    priority: 5
+
+  # Face Detection
+  - name: "Face Detection Model"
+    type: "face_detection"
+    filename: "s3fd.pth"
+    destination: "models/face_detection"
+    url: "https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth"
+    size: 90000000  # ~90MB
+    checksum: ""
+    checksum_type: "md5"
+    version: "1.0"
+    description: "Modelo S3FD para detecção de faces"
+    required: true
+    priority: 2
+
+  # Face Landmarks
+  - name: "Face Landmarks Model"
+    type: "face_landmarks"
+    filename: "2DFAN4.pth"
+    destination: "models/face_detection"
+    url: "https://www.adrianbulat.com/downloads/python-fan/2DFAN4-11f355bf06.pth.tar"
+    size: 200000000  # ~200MB
+    checksum: ""
+    checksum_type: "md5"
+    version: "1.0"
+    description: "Modelo 2DFAN4 para detecção de landmarks faciais"
+    required: true
+    priority: 2
+
+# Configurações de download
+download_settings:
+  chunk_size: 1048576  # 1MB por chunk
+  max_retries: 3
+  retry_delay: 2  # segundos
+  timeout: 300  # 5 minutos
+  verify_ssl: true
+  use_cache: true
+  parallel_downloads: 2  # Baixar até 2 modelos simultaneamente
+
+# Configurações de validação
+validation:
+  verify_checksums: true
+  verify_file_sizes: true
+  verify_file_integrity: true  # Tentar carregar o modelo para verificar
+
+# Mapeamento de modelos por workflow
+workflow_requirements:
+  basic_lipsync:
+    required:
+      - "XTTS v2"
+      - "XTTS v2 Config"
+      - "XTTS v2 Vocab"
+      - "LatentSync 1.6"
+      - "LatentSync VAE"
+      - "VAE FT MSE"
+      - "Face Detection Model"
+      - "Face Landmarks Model"
+    optional:
+      - "Realistic Vision v5.1"
+
+  segmented_lipsync:
+    required:
+      - "XTTS v2"
+      - "XTTS v2 Config"
+      - "XTTS v2 Vocab"
+      - "LatentSync 1.6"
+      - "LatentSync VAE"
+      - "VAE FT MSE"
+      - "Face Detection Model"
+      - "Face Landmarks Model"
+    optional:
+      - "Realistic Vision v5.1"
+
+  full_pipeline:
+    required:
+      - "XTTS v2"
+      - "XTTS v2 Config"
+      - "XTTS v2 Vocab"
+      - "LatentSync 1.6"
+      - "LatentSync VAE"
+      - "VAE FT MSE"
+      - "Realistic Vision v5.1"
+      - "Face Detection Model"
+      - "Face Landmarks Model"
+    optional:
+      - "DreamShaper 8"
+      - "Wav2Lip GAN"
+
+# Alternativas e fallbacks
+alternatives:
+  lipsync:
+    primary: "LatentSync 1.6"
+    fallback: "Wav2Lip GAN"
+
+  checkpoint:
+    primary: "Realistic Vision v5.1"
+    fallback: "DreamShaper 8"
+
+# Notas sobre modelos
+notes:
+  xtts: |
+    XTTS v2 é um modelo de TTS multilíngue de alta qualidade.
+    Suporta 13 idiomas incluindo português brasileiro.
+    Requer ~2GB de VRAM durante inferência.
+
+  latentsync: |
+    LatentSync 1.6 é o modelo principal de lipsync.
+    Oferece qualidade superior ao Wav2Lip mas requer mais VRAM (~4-6GB).
+    Funciona melhor com retratos frontais bem iluminados.
+
+  wav2lip: |
+    Wav2Lip GAN é uma alternativa mais leve ao LatentSync.
+    Requer apenas ~1-2GB de VRAM mas com qualidade ligeiramente inferior.
+    Boa opção para GPUs com menos memória.
+
+  checkpoints: |
+    Checkpoints são opcionais mas melhoram a qualidade final.
+    Realistic Vision v5.1 é recomendado para conteúdo realista.
+    DreamShaper 8 oferece estilo mais artístico.

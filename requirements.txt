@@ -1,0 +1,223 @@
+# Lipsync ComfyUI Workflow - Dependências Python
+# Para o canal CÓSMICA DREAD
+# Python 3.10+
+
+# ==============================================================================
+# CORE DEPENDENCIES
+# ==============================================================================
+
+# PyTorch (instalar versão específica para sua GPU)
+# Para CUDA 11.8:
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# Para instalação específica de PyTorch, use:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# ==============================================================================
+# COMFYUI DEPENDENCIES
+# ==============================================================================
+
+# Processamento de imagem
+Pillow>=10.0.0
+opencv-python>=4.8.0
+imageio>=2.31.0
+imageio-ffmpeg>=0.4.9
+
+# Processamento de áudio
+librosa>=0.10.0
+soundfile>=0.12.0
+scipy>=1.11.0
+resampy>=0.4.2
+
+# Redes neurais e deep learning
+numpy>=1.24.0
+einops>=0.7.0
+safetensors>=0.4.0
+transformers>=4.35.0
+accelerate>=0.24.0
+diffusers>=0.24.0
+omegaconf>=2.3.0
+
+# Otimizações
+xformers>=0.0.22; platform_system != "Darwin"  # Não disponível no macOS
+
+# ==============================================================================
+# TEXT-TO-SPEECH (XTTS)
+# ==============================================================================
+
+# TTS engine
+TTS>=0.22.0
+# Coqui TTS (XTTS v2)
+coqui-tts>=0.22.0
+
+# Phonemizer (necessário para TTS)
+phonemizer>=3.2.0
+
+# ==============================================================================
+# FACE DETECTION & LANDMARKS
+# ==============================================================================
+
+# Face detection
+face-alignment>=1.4.0
+# Detecção e análise facial
+dlib>=19.24.0; platform_system != "Windows"  # Difícil compilar no Windows
+mediapipe>=0.10.0
+
+# ==============================================================================
+# VIDEO PROCESSING
+# ==============================================================================
+
+# FFmpeg wrapper
+ffmpeg-python>=0.2.0
+
+# Video I/O
+av>=10.0.0
+
+# ==============================================================================
+# WEB & API
+# ==============================================================================
+
+# HTTP requests
+requests>=2.31.0
+urllib3>=2.0.0
+
+# Async
+aiohttp>=3.9.0
+asyncio>=3.4.3
+
+# WebSockets (para ComfyUI API)
+websocket-client>=1.6.0
+
+# ==============================================================================
+# CONFIGURATION & DATA
+# ==============================================================================
+
+# YAML parsing
+PyYAML>=6.0
+
+# JSON processing
+jsonschema>=4.19.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# ==============================================================================
+# CLI & UI
+# ==============================================================================
+
+# Terminal colors
+colorama>=0.4.6
+
+# Progress bars
+tqdm>=4.66.0
+
+# Rich terminal formatting
+rich>=13.6.0
+
+# Click para CLI
+click>=8.1.0
+
+# Argument parsing
+argparse>=1.4.0
+
+# ==============================================================================
+# UTILITIES
+# ==============================================================================
+
+# Path handling
+pathlib>=1.0.1
+
+# Type hints
+typing-extensions>=4.8.0
+
+# Data classes
+dataclasses>=0.6; python_version < "3.10"
+
+# Hashing
+hashlib>=20081119
+
+# System info
+psutil>=5.9.0
+GPUtil>=1.4.0
+
+# ==============================================================================
+# TESTING
+# ==============================================================================
+
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.12.0
+
+# ==============================================================================
+# DEVELOPMENT
+# ==============================================================================
+
+# Code formatting
+black>=23.10.0
+isort>=5.12.0
+
+# Linting
+flake8>=6.1.0
+pylint>=3.0.0
+
+# Type checking
+mypy>=1.6.0
+
+# ==============================================================================
+# OPTIONAL DEPENDENCIES
+# ==============================================================================
+
+# Gradio para web UI (opcional)
+gradio>=4.0.0
+
+# Jupyter para notebooks (opcional)
+jupyter>=1.0.0
+ipython>=8.17.0
+
+# Plotagem (opcional)
+matplotlib>=3.8.0
+
+# Monitoring (opcional)
+tensorboard>=2.15.0
+
+# GPU monitoring (opcional)
+nvidia-ml-py3>=7.352.0; platform_system != "Darwin"
+
+# ==============================================================================
+# NOTAS DE INSTALAÇÃO
+# ==============================================================================
+
+# 1. PYTORCH:
+#    Instale primeiro PyTorch com suporte CUDA adequado:
+#    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+#
+# 2. XFORMERS:
+#    Para melhor performance, instale xformers:
+#    pip install xformers
+#
+# 3. DLIB (opcional):
+#    No Windows, pode ser necessário instalar via conda:
+#    conda install -c conda-forge dlib
+#
+# 4. PHONEMIZER:
+#    Requer espeak instalado no sistema:
+#    - Ubuntu/Debian: sudo apt-get install espeak-ng
+#    - Windows: baixar de https://github.com/espeak-ng/espeak-ng/releases
+#    - macOS: brew install espeak-ng
+#
+# 5. FFMPEG:
+#    Necessário para processamento de vídeo:
+#    - Ubuntu/Debian: sudo apt-get install ffmpeg
+#    - Windows: baixar de https://ffmpeg.org/download.html
+#    - macOS: brew install ffmpeg
+#
+# 6. INSTALAÇÃO COMPLETA:
+#    pip install -r requirements.txt
+#
+# 7. INSTALAÇÃO MÍNIMA (sem opcionais):
+#    grep -v "^#" requirements.txt | grep -v "opcional" | pip install -r /dev/stdin
+#
+# ==============================================================================

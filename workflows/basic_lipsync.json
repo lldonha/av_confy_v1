@@ -1,0 +1,108 @@
+{
+  "_comment": "Workflow básico de lipsync para ComfyUI",
+  "_description": "Gera vídeo com lipsync a partir de imagem + texto",
+  "_inputs": {
+    "image": "Caminho para imagem de retrato",
+    "text": "Texto para narração"
+  },
+  "_outputs": {
+    "video": "Vídeo MP4 com lipsync sincronizado"
+  },
+
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "portrait.png"
+    },
+    "_meta": {
+      "title": "Carregar Imagem de Retrato"
+    }
+  },
+
+  "2": {
+    "class_type": "XTTSTextToAudio",
+    "inputs": {
+      "text": "Bem-vindo ao Cósmica Dread",
+      "language": "pt",
+      "temperature": 0.7,
+      "speed": 1.0,
+      "enable_text_splitting": true
+    },
+    "_meta": {
+      "title": "XTTS v2 - Gerar Áudio"
+    }
+  },
+
+  "3": {
+    "class_type": "LatentSyncNode",
+    "inputs": {
+      "image": ["1", 0],
+      "audio": ["2", 0],
+      "lips_expression": 2.0,
+      "inference_steps": 25,
+      "guidance_scale": 7.5,
+      "strength": 0.8
+    },
+    "_meta": {
+      "title": "LatentSync 1.6 - Aplicar Lipsync"
+    }
+  },
+
+  "4": {
+    "class_type": "VHSVideoCombine",
+    "inputs": {
+      "frames": ["3", 0],
+      "audio": ["2", 0],
+      "fps": 30,
+      "codec": "h264",
+      "quality": "high",
+      "format": "video/h264-mp4"
+    },
+    "_meta": {
+      "title": "Combinar Vídeo + Áudio"
+    }
+  },
+
+  "5": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": ["4", 0],
+      "filename_prefix": "lipsync_basic",
+      "output_path": "output/"
+    },
+    "_meta": {
+      "title": "Salvar Vídeo Final"
+    }
+  },
+
+  "_workflow_info": {
+    "name": "Basic Lipsync",
+    "version": "1.0",
+    "author": "Cósmica Dread",
+    "description": "Workflow básico para geração de vídeos com lipsync",
+    "requirements": {
+      "nodes": ["ComfyUI-XTTS", "ComfyUI-LatentSync", "ComfyUI-VideoHelperSuite"],
+      "models": ["XTTS v2", "LatentSync 1.6", "VAE FT MSE"],
+      "vram_min": "8GB",
+      "duration": "2-5 minutos para 10-15s de vídeo"
+    },
+    "parameters": {
+      "configurable": {
+        "language": "Idioma do áudio (pt, en, es, etc)",
+        "temperature": "Criatividade da geração (0.1-2.0)",
+        "lips_expression": "Intensidade dos lábios (1.0-3.0)",
+        "inference_steps": "Qualidade do lipsync (10-50)",
+        "fps": "FPS do vídeo (24, 30, 60)"
+      }
+    },
+    "usage": {
+      "example": "python scripts/run_workflow.py --workflow basic --image portrait.png --text 'Olá mundo'",
+      "best_for": [
+        "Vídeos curtos (10-30 segundos)",
+        "Uma única imagem de retrato",
+        "Narração simples",
+        "Testes e prototipagem"
+      ]
+    }
+  }
+}

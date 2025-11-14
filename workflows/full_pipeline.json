@@ -1,0 +1,280 @@
+{
+  "_comment": "Pipeline completo com geração de imagem + lipsync",
+  "_description": "Gera retrato com Stable Diffusion e aplica lipsync",
+  "_inputs": {
+    "prompt": "Descrição da imagem a gerar",
+    "text": "Texto para narração"
+  },
+  "_outputs": {
+    "image": "Retrato gerado",
+    "video": "Vídeo com lipsync aplicado"
+  },
+
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "realisticVisionV51.safetensors"
+    },
+    "_meta": {
+      "title": "Carregar Checkpoint SD"
+    }
+  },
+
+  "2": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000.safetensors"
+    },
+    "_meta": {
+      "title": "Carregar VAE"
+    }
+  },
+
+  "3": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "portrait of a person, frontal view, realistic, high quality, detailed face",
+      "clip": ["1", 1]
+    },
+    "_meta": {
+      "title": "Prompt Positivo"
+    }
+  },
+
+  "4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "blurry, low quality, distorted, side view, profile",
+      "clip": ["1", 1]
+    },
+    "_meta": {
+      "title": "Prompt Negativo"
+    }
+  },
+
+  "5": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 512,
+      "height": 512,
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "Latent Vazio"
+    }
+  },
+
+  "6": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["1", 0],
+      "positive": ["3", 0],
+      "negative": ["4", 0],
+      "latent_image": ["5", 0],
+      "seed": 42,
+      "steps": 30,
+      "cfg": 7.5,
+      "sampler_name": "euler_a",
+      "scheduler": "normal",
+      "denoise": 1.0
+    },
+    "_meta": {
+      "title": "Gerador de Imagem (KSampler)"
+    }
+  },
+
+  "7": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["6", 0],
+      "vae": ["2", 0]
+    },
+    "_meta": {
+      "title": "Decodificar Latent para Imagem"
+    }
+  },
+
+  "8": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["7", 0],
+      "filename_prefix": "generated_portrait"
+    },
+    "_meta": {
+      "title": "Salvar Retrato Gerado"
+    }
+  },
+
+  "9": {
+    "class_type": "XTTSTextToAudio",
+    "inputs": {
+      "text": "Bem-vindo ao Cósmica Dread. Histórias de terror que vão assombrar seus sonhos.",
+      "language": "pt",
+      "temperature": 0.7,
+      "speed": 1.0,
+      "enable_text_splitting": true
+    },
+    "_meta": {
+      "title": "XTTS v2 - Gerar Áudio"
+    }
+  },
+
+  "10": {
+    "class_type": "AudioEffects",
+    "inputs": {
+      "audio": ["9", 0],
+      "reverb": 0.3,
+      "echo": 0.2,
+      "distortion": 0.1,
+      "low_pass_filter": 8000,
+      "high_pass_filter": 100
+    },
+    "_meta": {
+      "title": "Efeitos de Áudio (Terror)"
+    }
+  },
+
+  "11": {
+    "class_type": "LatentSyncNode",
+    "inputs": {
+      "image": ["7", 0],
+      "audio": ["10", 0],
+      "lips_expression": 2.0,
+      "inference_steps": 30,
+      "guidance_scale": 7.5,
+      "strength": 0.8
+    },
+    "_meta": {
+      "title": "LatentSync 1.6 - Aplicar Lipsync"
+    }
+  },
+
+  "12": {
+    "class_type": "VHSVideoCombine",
+    "inputs": {
+      "frames": ["11", 0],
+      "audio": ["10", 0],
+      "fps": 30,
+      "codec": "h264",
+      "quality": "ultra",
+      "format": "video/h264-mp4"
+    },
+    "_meta": {
+      "title": "Combinar Vídeo + Áudio"
+    }
+  },
+
+  "13": {
+    "class_type": "VideoPostProcessing",
+    "inputs": {
+      "video": ["12", 0],
+      "color_grading": "dark_horror",
+      "vignette": 0.3,
+      "grain": 0.15,
+      "contrast": 1.2,
+      "saturation": 0.9
+    },
+    "_meta": {
+      "title": "Pós-processamento (Tema Terror)"
+    }
+  },
+
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": ["13", 0],
+      "filename_prefix": "lipsync_full_pipeline",
+      "output_path": "output/"
+    },
+    "_meta": {
+      "title": "Salvar Vídeo Final"
+    }
+  },
+
+  "_workflow_info": {
+    "name": "Full Pipeline - Generation + Lipsync",
+    "version": "1.0",
+    "author": "Cósmica Dread",
+    "description": "Pipeline completo: gera retrato realista e aplica lipsync com efeitos de terror",
+    "requirements": {
+      "nodes": [
+        "ComfyUI (core)",
+        "ComfyUI-XTTS",
+        "ComfyUI-LatentSync",
+        "ComfyUI-VideoHelperSuite"
+      ],
+      "models": [
+        "Realistic Vision v5.1 (checkpoint)",
+        "VAE FT MSE",
+        "XTTS v2",
+        "LatentSync 1.6"
+      ],
+      "vram_min": "12GB",
+      "duration": "5-10 minutos para 15s de vídeo (inclui geração de imagem)"
+    },
+    "parameters": {
+      "image_generation": {
+        "prompt": "Descrição do retrato a gerar",
+        "negative_prompt": "O que evitar na geração",
+        "steps": "Passos de inferência SD (20-50)",
+        "cfg": "Guidance scale (7-15)",
+        "seed": "Seed para reprodutibilidade",
+        "resolution": "Largura e altura (512, 768, etc)"
+      },
+      "audio_generation": {
+        "text": "Texto para narração",
+        "language": "Idioma (pt, en, etc)",
+        "temperature": "Criatividade (0.1-2.0)"
+      },
+      "audio_effects": {
+        "reverb": "Reverberação (0.0-1.0)",
+        "echo": "Eco (0.0-1.0)",
+        "distortion": "Distorção (0.0-1.0)"
+      },
+      "lipsync": {
+        "lips_expression": "Intensidade dos lábios (1.0-3.0)",
+        "inference_steps": "Qualidade do lipsync (20-50)"
+      },
+      "post_processing": {
+        "color_grading": "Preset de cores (dark_horror, vintage, etc)",
+        "vignette": "Vinheta (0.0-1.0)",
+        "grain": "Grão de filme (0.0-1.0)"
+      }
+    },
+    "usage": {
+      "example": "python scripts/run_workflow.py --workflow full --prompt 'mysterious woman with dark eyes' --text 'Welcome to the darkness'",
+      "best_for": [
+        "Conteúdo completo do zero",
+        "Personagens consistentes",
+        "Produções de alta qualidade",
+        "Conteúdo do canal Cósmica Dread"
+      ]
+    },
+    "notes": [
+      "Este workflow gera TUDO do zero: imagem + áudio + vídeo",
+      "Requer mais VRAM devido à geração de imagem com SD",
+      "Aplica efeitos específicos para tema de terror",
+      "Qualidade máxima: use quality='ultra' e inference_steps altos",
+      "Para produção: considere usar RTX 4070 12GB ou superior"
+    ],
+    "cosmica_dread_preset": {
+      "enabled": true,
+      "settings": {
+        "prompt_suffix": "horror style, dark atmosphere, cinematic lighting",
+        "negative_prompt_suffix": "cheerful, bright, colorful, cartoon",
+        "color_grading": "dark_horror",
+        "audio_effects": {
+          "reverb": 0.3,
+          "echo": 0.2,
+          "distortion": 0.1
+        },
+        "post_processing": {
+          "vignette": 0.3,
+          "grain": 0.15,
+          "contrast": 1.2,
+          "saturation": 0.9
+        }
+      }
+    }
+  }
+}
