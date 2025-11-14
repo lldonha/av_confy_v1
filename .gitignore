@@ -1,0 +1,307 @@
+# Lipsync ComfyUI Workflow - .gitignore
+
+# ==============================================================================
+# PYTHON
+# ==============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# ==============================================================================
+# PROJECT SPECIFIC
+# ==============================================================================
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Output gerados
+output/
+*.mp4
+*.avi
+*.webm
+*.mkv
+*.mov
+
+# Áudio gerado
+*.wav
+*.mp3
+*.ogg
+*.flac
+
+# Imagens temporárias
+temp/
+tmp/
+.temp/
+.tmp/
+
+# Cache
+.cache/
+.model_cache/
+*.cache
+
+# Downloads parciais
+*.part
+*.crdownload
+*.download
+
+# Arquivos de backup
+*.bak
+*.backup
+*~
+
+# ==============================================================================
+# MODELOS (NÃO COMMITAR - SÃO GRANDES)
+# ==============================================================================
+
+# Modelos de ML
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+*.pb
+*.h5
+*.pkl
+*.pickle
+
+# Embeddings
+*.npy
+*.npz
+
+# ==============================================================================
+# COMFYUI
+# ==============================================================================
+
+# ComfyUI installation (se estiver no mesmo diretório)
+ComfyUI/
+
+# Custom nodes do ComfyUI
+custom_nodes/
+
+# Modelos do ComfyUI
+models/
+!models/.gitkeep
+
+# ==============================================================================
+# ENVIRONMENT & CONFIG
+# ==============================================================================
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Config com dados sensíveis
+config/secrets.yaml
+config/private.yaml
+config/local.yaml
+
+# ==============================================================================
+# IDE / EDITOR
+# ==============================================================================
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*.swn
+.vim/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ==============================================================================
+# OS
+# ==============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ==============================================================================
+# MEDIA & ASSETS (exceto os de teste)
+# ==============================================================================
+
+# Ignorar todos os media, exceto assets de teste
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.svg
+
+# Mas manter assets de teste
+!assets/test_portrait.png
+!assets/test_audio.wav
+!assets/.gitkeep
+!docs/images/*.png
+!docs/images/*.jpg
+
+# ==============================================================================
+# DOCUMENTATION BUILD
+# ==============================================================================
+
+# Sphinx documentation
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# MkDocs
+site/
+
+# ==============================================================================
+# DATABASE
+# ==============================================================================
+
+*.db
+*.sqlite
+*.sqlite3
+
+# ==============================================================================
+# MONITORING & PROFILING
+# ==============================================================================
+
+# TensorBoard
+runs/
+tensorboard/
+
+# Profiling
+*.prof
+*.lprof
+
+# ==============================================================================
+# SECURITY
+# ==============================================================================
+
+# Private keys
+*.pem
+*.key
+*.cert
+*.crt
+
+# Secrets
+secrets/
+.secrets/
+credentials.json
+
+# ==============================================================================
+# MISC
+# ==============================================================================
+
+# Compressed files
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Archives
+archive/
+old/
+deprecated/
+
+# TODO files privados
+TODO.txt
+NOTES.txt
+.notes/
+
+# ==============================================================================
+# CUSTOM
+# ==============================================================================
+
+# Adicione seus próprios padrões aqui

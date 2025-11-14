@@ -1,0 +1,106 @@
+# Configuração do Lipsync ComfyUI Workflow
+# Para o canal CÓSMICA DREAD
+
+# Configurações gerais
+general:
+  project_name: "Cósmica Dread Lipsync"
+  version: "1.0.0"
+  comfyui_path: "ComfyUI"  # Caminho para instalação do ComfyUI
+  comfyui_url: "http://127.0.0.1:8188"  # URL da API do ComfyUI
+
+# Configurações de logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file_level: "DEBUG"
+  console_level: "INFO"
+  log_dir: "logs"
+  log_file: "lipsync_workflow.log"
+  max_file_size_mb: 10
+  backup_count: 5
+
+# Configurações de workflow
+workflow_settings:
+  # Configurações de áudio (XTTS)
+  audio:
+    language: "pt"  # pt, en, es, fr, de, it, pl, tr, ru, nl, cs, ar, zh-cn, ja, hu, ko
+    temperature: 0.7  # 0.1 (mais consistente) - 2.0 (mais criativo)
+    speed: 1.0  # Velocidade da fala (0.5 - 2.0)
+    sample_rate: 24000  # Taxa de amostragem (16000, 22050, 24000)
+
+  # Configurações de lipsync (LatentSync)
+  lipsync:
+    lips_expression: 2.0  # Intensidade da expressão labial (1.0 - 3.0)
+    inference_steps: 25  # Passos de inferência (10 - 50, mais = melhor qualidade)
+    guidance_scale: 7.5  # Escala de guidance (5.0 - 15.0)
+    strength: 0.8  # Força do efeito (0.5 - 1.0)
+
+  # Configurações de vídeo
+  video:
+    output_fps: 30  # 24, 25, 30, 60
+    resolution: [512, 512]  # [largura, altura] - múltiplos de 64
+    codec: "h264"  # h264, h265, vp9
+    quality: "high"  # low, medium, high, ultra
+    format: "mp4"  # mp4, avi, webm
+
+  # Configurações de processamento
+  processing:
+    batch_size: 1  # Tamanho do batch (1-4)
+    use_half_precision: true  # Usar FP16 para economizar VRAM
+    enable_xformers: true  # Ativar xformers se disponível
+    low_vram_mode: false  # Modo de baixo uso de VRAM
+    cpu_offload: false  # Offload para CPU se necessário
+
+# Configurações de output
+output:
+  output_dir: "output"
+  save_intermediates: false  # Salvar arquivos intermediários (áudio, frames, etc)
+  naming_pattern: "lipsync_{timestamp}_{workflow}"  # Padrão de nomenclatura
+  overwrite_existing: false  # Sobrescrever arquivos existentes
+
+# Configurações de performance
+performance:
+  max_parallel_tasks: 2  # Máximo de tarefas paralelas
+  timeout_seconds: 600  # Timeout para execução (10 minutos)
+  retry_on_failure: true  # Tentar novamente em caso de falha
+  max_retries: 3  # Número máximo de tentativas
+
+# Configurações de hardware
+hardware:
+  gpu_id: 0  # ID da GPU a usar (0, 1, 2...)
+  max_vram_usage_gb: 10  # Limite de VRAM (GB)
+  enable_cpu_fallback: true  # Usar CPU se GPU falhar
+
+# Configurações avançadas
+advanced:
+  # Segmentação para textos longos
+  text_segmentation:
+    enabled: true
+    max_chars_per_segment: 500  # Máximo de caracteres por segmento
+    split_on_punctuation: true  # Dividir em pontuação
+    overlap_chars: 50  # Sobreposição entre segmentos
+
+  # Cache
+  cache:
+    enabled: true
+    cache_dir: ".cache"
+    cache_models: true
+    cache_embeddings: true
+
+  # Pós-processamento
+  post_processing:
+    denoise_audio: false  # Reduzir ruído do áudio
+    enhance_video: false  # Melhorar qualidade do vídeo
+    add_subtitles: false  # Adicionar legendas
+    add_background_music: false  # Adicionar música de fundo
+    background_music_volume: 0.2  # Volume da música (0.0 - 1.0)
+
+# Configurações específicas do canal CÓSMICA DREAD
+cosmica_dread:
+  theme: "horror"  # Tema do canal
+  default_voice: "narrator_dark"  # Voz padrão
+  add_effects: true  # Adicionar efeitos de terror
+  effects:
+    reverb: 0.3  # Reverberação (0.0 - 1.0)
+    echo: 0.2  # Eco (0.0 - 1.0)
+    distortion: 0.1  # Distorção (0.0 - 1.0)
+    creepy_background: false  # Sons de fundo assustadores
